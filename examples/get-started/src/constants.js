@@ -3,7 +3,7 @@ import {CarMesh} from 'streetscape.gl';
 
 /* eslint-disable camelcase */
 //export const MAPBOX_TOKEN = process.env.MapboxAccessToken; // eslint-disable-line
-export const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmFyYWtmaXNoZXIiLCJhIjoiY2tzNG5zN2U0MWRtcjMwcW1hb29laXl1byJ9.bnxoOm9L_fvMn_lH-87pgg'
+export const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmFyYWtmaXNoZXIiLCJhIjoiY2tzNG5zN2U0MWRtcjMwcW1hb29laXl1byJ9.bnxoOm9L_fvMn_lH-87pgg' // eslint-disable-line
 
 export const MAP_STYLE = 'mapbox://styles/uberdata/cjfxhlikmaj1b2soyzevnywgs';
 
@@ -18,7 +18,8 @@ export const CAR = CarMesh.sedan({
   length: 4.3,
   width: 2.2,
   height: 1.5,
-  color: [160, 160, 160],
+  //TODO: Display car 
+  color: [160, 160, 160, 0],
 
 });
 

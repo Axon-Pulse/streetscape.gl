@@ -62,9 +62,7 @@ export default class CameraPanel extends PureComponent {
   render() {
     const { log } = this.props;
     const { panelState } = this.state;
-    if (log.updates > 35){
-      return <div></div>
-    }
+
     return (
       <div>
 
