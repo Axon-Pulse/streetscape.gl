@@ -34,6 +34,7 @@ import Toolbar from './toolbar';
 import HUD from './hud';
 import NotificationPanel from './notification-panel';
 import isMobile from './is-mobile';
+import {XVIZStreamLoader} from 'streetscape.gl';
 
 import {LOGS, MOBILE_NOTIFICATION} from './constants';
 import {UI_THEME} from './custom-styles';
@@ -45,8 +46,24 @@ class Example extends PureComponent {
     ...(!isMobile && this._loadLog(LOGS[0])),
     settings: {
       viewMode: 'PERSPECTIVE',
-      showTooltip: false
-    }
+      showTooltip: false,
+      viewState: {
+        altitude: 1.5,
+        bearing: 72.93234514293981,
+        height: 1088,
+        latitude: 49.01128254711867,
+        longitude: 8.422956503971733,
+        maxPitch: 85,
+        maxZoom: 24,
+        minPitch: 0,
+        minZoom: 12,
+        pitch: 79.46287171948006,
+        width: 916,
+        zoom: 22
+      },
+      viewOffset: { bearing: -78.88, x: 5.56, y: 142.16 }
+    },
+
   };
 
   _loadLog(logSettings) {
@@ -54,18 +71,36 @@ class Example extends PureComponent {
       setXVIZConfig(logSettings.xvizConfig);
     }
 
-    const loader = new XVIZFileLoader({
-      timingsFilePath: `${logSettings.path}/0-frame.json`,
-      getFilePath: index => `${logSettings.path}/${index + 1}-frame.glb`,
+    const loader =  new XVIZStreamLoader({
+      logGuid: 'mock',
+      // bufferLength: 15,
+      serverConfig: {
+        defaultLogLength: 30,
+        serverUrl: 'ws://localhost:8082'
+      },
       worker: true,
       maxConcurrency: 4
+    }).on('ready', () =>
+    loader.updateStreamSettings({
+      '/tracklets/label': true,
+      // '/vehicle/':false
     })
-      .on('ready', () =>
-        loader.updateStreamSettings({
-          '/tracklets/label': false
-        })
-      )
-      .on('error', console.error); // eslint-disable-line
+  )
+  .on('error', console.error); // eslint-disable-line
+    
+
+    // const loader = new XVIZFileLoader({
+    //   timingsFilePath: `${logSettings.path}/0-frame.json`,
+    //   getFilePath: index => `${logSettings.path}/${index + 1}-frame.glb`,
+    //   worker: true,
+    //   maxConcurrency: 4
+    // })
+      // .on('ready', () =>
+      //   loader.updateStreamSettings({
+      //     '/tracklets/label': false
+      //   })
+      // )
+      // .on('error', console.error); // eslint-disable-line
 
     loader.connect();
 
@@ -96,7 +131,7 @@ class Example extends PureComponent {
 
         <ControlPanel selectedLog={selectedLog} onLogChange={this._onLogChange} log={log} />
 
-        <HUD log={log} />
+        <HUD log={log} showHud={false}/> 
 
         <Timeline log={log} />
 

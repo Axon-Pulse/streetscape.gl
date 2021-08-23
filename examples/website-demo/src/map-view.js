@@ -18,28 +18,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 
-import {LogViewer, VIEW_MODE} from 'streetscape.gl';
+import { LogViewer, VIEW_MODE } from 'streetscape.gl';
 
-import {MAPBOX_TOKEN, MAP_STYLE, CAR} from './constants';
-import {XVIZ_STYLE, LOG_VIEWER_STYLE} from './custom-styles';
+import { MAPBOX_TOKEN, MAP_STYLE, CAR } from './constants';
+import { XVIZ_STYLE, LOG_VIEWER_STYLE } from './custom-styles';
 
 const OBJECT_ICONS = {
+  Vehicles: 'car',
+  Walkers: 'pedestrian',
+  '2Wheels': 'bike',
   Car: 'car',
   Van: 'bus',
   Pedestrian: 'pedestrian',
   Cyclist: 'bike'
 };
 
-const renderObjectLabel = ({id, object, isSelected}) => {
-  const feature = object.getFeature('/tracklets/objects');
+const getLabel = (id, log) => {
+  debugger
+      let label = 'car';
+      const currentObject = log.getCurrentFrame().features['/tracklets/objects'].filter(({ id: _id }) => _id.includes(id))[0];
+      label = OBJECT_ICONS[currentObject?.id?.split(" ")[0]];
+      return label
+}
+//const renderObjectLabel = ({id, object, isSelected}) => {
+const renderObjectLabel =  ({ id, object, isSelected, log }) => {
+  // const label =  getLabel(id, log);
 
+  // const label = 'car'
+  
+
+  const feature = log.getCurrentFrame().features['/tracklets/objects'].filter(({ id: _id }) => _id.includes(id))[0];
+  //  if(isSelected){
+     debugger
+  //  }
+  // return (
+  //   <div>
+  //     <i className={`icon-${label}`} />
+  //   </div>
+  // );
   if (!feature) {
     return isSelected && <b>{id}</b>;
   }
 
-  const {classes} = feature.base;
+  const { classes } = feature.base;
 
   if (isSelected) {
     return (
@@ -52,8 +75,9 @@ const renderObjectLabel = ({id, object, isSelected}) => {
     );
   }
 
-  const objectType = classes && classes.join('');
+  const objectType = classes;
   if (objectType in OBJECT_ICONS) {
+    debugger
     return (
       <div>
         <i className={`icon-${OBJECT_ICONS[objectType]}`} />
@@ -65,12 +89,12 @@ const renderObjectLabel = ({id, object, isSelected}) => {
 };
 
 export default class MapView extends PureComponent {
-  _onViewStateChange = ({viewOffset}) => {
-    this.props.onSettingsChange({viewOffset});
+  _onViewStateChange = ({ viewOffset }) => {
+    this.props.onSettingsChange({ viewOffset });
   };
 
   render() {
-    const {log, settings} = this.props;
+    const { log, settings } = this.props;
 
     return (
       <LogViewer
@@ -84,7 +108,7 @@ export default class MapView extends PureComponent {
         viewMode={VIEW_MODE[settings.viewMode]}
         viewOffset={settings.viewOffset}
         onViewStateChange={this._onViewStateChange}
-        renderObjectLabel={renderObjectLabel}
+        renderObjectLabel={({ id, object, isSelected }) => renderObjectLabel({ id, object, isSelected, log })}
       />
     );
   }

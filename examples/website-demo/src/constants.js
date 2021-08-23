@@ -33,7 +33,7 @@ export const CAR = {
   origin: [1.08, -0.32, 0],
   scale: 0.0009,
   wireframe: true,
-  color: [160, 160, 160]
+  color: [160, 160, 160,0]
 };
 
 export const SETTINGS = {

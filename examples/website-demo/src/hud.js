@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, {PureComponent} from 'react';
-import {_BaseWidget as BaseWidget, TurnSignalWidget, MeterWidget} from 'streetscape.gl';
+import React, { Fragment, PureComponent } from 'react';
+import { _BaseWidget as BaseWidget, TurnSignalWidget, MeterWidget } from 'streetscape.gl';
 
 const WHEEL_WIDGET_STYLE = {
   arcRadius: 0,
@@ -59,54 +59,59 @@ const AUTONOMY_STATE = {
 };
 
 export default class HUD extends PureComponent {
-  _renderAutonomyState({streams}) {
+  _renderAutonomyState({ streams }) {
     const state = (streams.state.data && streams.state.data.variable) || 'unknown';
     return (
-      <div className="autonomy-state" style={{background: AUTONOMY_STATE[state]}}>
+      <div className="autonomy-state" style={{ background: AUTONOMY_STATE[state] }}>
         {state}
       </div>
     );
   }
 
   render() {
-    const {log} = this.props;
+    const { log, showHud } = this.props;
 
     return (
       <div id="hud">
-        <div className="hud-column">
-          <BaseWidget log={log} streamNames={{state: '/vehicle/autonomy_state'}}>
-            {this._renderAutonomyState}
-          </BaseWidget>
-          <TurnSignalWidget
-            log={log}
-            style={TURN_SIGNAL_WIDGET_STYLE}
-            streamName="/vehicle/turn_signal"
-          />
-          <MeterWidget
-            log={log}
-            style={WHEEL_WIDGET_STYLE}
-            streamName="/vehicle/wheel_angle"
-            units="Wheel"
-            min={-180}
-            max={180}
-          />
-        </div>
-        <MeterWidget
-          log={log}
-          style={METER_WIDGET_STYLE}
-          streamName="/vehicle/acceleration"
-          units="Acceleration"
-          min={-4}
-          max={4}
-        />
-        <MeterWidget
-          log={log}
-          style={METER_WIDGET_STYLE}
-          streamName="/vehicle/velocity"
-          units="Speed"
-          min={0}
-          max={20}
-        />
+        {showHud &&
+          <Fragment>
+            <div className="hud-column">
+              <BaseWidget log={log} streamNames={{ state: '/vehicle/autonomy_state' }}>
+                {this._renderAutonomyState}
+              </BaseWidget>
+              <TurnSignalWidget
+                log={log}
+                style={TURN_SIGNAL_WIDGET_STYLE}
+                streamName="/vehicle/turn_signal"
+              />
+              <MeterWidget
+                log={log}
+                style={WHEEL_WIDGET_STYLE}
+                streamName="/vehicle/wheel_angle"
+                units="Wheel"
+                min={-180}
+                max={180}
+              />
+            </div>
+            <MeterWidget
+              log={log}
+              style={METER_WIDGET_STYLE}
+              streamName="/vehicle/acceleration"
+              units="Acceleration"
+              min={-4}
+              max={4}
+            />
+            <MeterWidget
+              log={log}
+              style={METER_WIDGET_STYLE}
+              streamName="/vehicle/velocity"
+              units="Speed"
+              min={0}
+              max={20}
+            />
+          </Fragment>
+        }
+
       </div>
     );
   }

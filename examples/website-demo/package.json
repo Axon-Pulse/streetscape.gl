@@ -3,6 +3,7 @@
   "description": "A demo of streetscape.gl",
   "version": "0.0.1",
   "scripts": {
+    "start-streaming-local": "webpack-dev-server --env.local --env.stream --progress --hot --open",
     "start-local": "webpack-dev-server --env.local --progress --hot --open",
     "build-clean": "rm -rf dist && mkdir dist",
     "build-copy": "cp -r assets dist && cp index.html dist",

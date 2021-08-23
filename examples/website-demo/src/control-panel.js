@@ -95,9 +95,9 @@ export default class ControlPanel extends PureComponent {
           </div>
           {!isHelpOpen && (
             <div id="tabs">
-              {this._renderTab({id: 'info', description: 'Log Info'})}
+              {/* {this._renderTab({id: 'info', description: 'Log Info'})} */}
               {this._renderTab({id: 'streams', description: 'Stream Settings'})}
-              {this._renderTab({id: 'charts', description: 'Charts'})}
+              {/* {this._renderTab({id: 'charts', description: 'Charts'})} */}
             </div>
           )}
         </header>
