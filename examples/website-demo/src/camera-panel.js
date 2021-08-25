@@ -19,39 +19,74 @@
 // THE SOFTWARE.
 
 /* global window */
-import React, {PureComponent} from 'react';
-import {XVIZPanel} from 'streetscape.gl';
-import {FloatPanel} from '@streetscape.gl/monochrome';
+import React, { PureComponent } from 'react';
+import { XVIZPanel } from 'streetscape.gl';
+import { FloatPanel } from '@streetscape.gl/monochrome';
 
-import {XVIZ_PANEL_STYLE, FLOAT_PANEL_STYLE} from './custom-styles';
+import { XVIZ_PANEL_STYLE, FLOAT_PANEL_STYLE } from './custom-styles';
 
-const TITLE_HEIGHT = 28;
+const TITLE_HEIGHT = 0;
+let PANEL_HEIGHT = 0;
+let PANEL_WIDTH = 0;
+const LEFT_PANEL_WIDTH = 350;
+const TIMLINE_HEIGHT = 150;
+
 
 export default class CameraPanel extends PureComponent {
   state = {
     panelState: {
-      x: window.innerWidth - 420,
-      y: 20,
+      x: LEFT_PANEL_WIDTH + 16,
+      y: window.innerHeight - TIMLINE_HEIGHT - 16 - (400 / this.props.videoAspectRatio) + TITLE_HEIGHT,
       width: 400,
-      height: 148,
+      height: 0,
       minimized: false
     }
   };
-
-  componentWillReceiveProps(nextProps) {
-    const {panelState} = this.state;
-    if (this.props.videoAspectRatio !== nextProps.videoAspectRatio) {
-      this.setState({
-        panelState: {
-          ...panelState,
-          height: panelState.width / nextProps.videoAspectRatio + TITLE_HEIGHT
-        }
-      });
-    }
+  componentDidMount() {
+    const { panelState } = this.state;
+    this.setState({
+      panelState: {
+        ...panelState,
+        height: panelState.width / this.props.videoAspectRatio + TITLE_HEIGHT
+      }
+    });      
+    PANEL_HEIGHT = panelState.width / this.props.videoAspectRatio + TITLE_HEIGHT;
+    PANEL_WIDTH = 400;
   }
 
+  
+
+  scale = (scale) => {
+  
+    scale = (parseInt(scale) / 100);
+    this.setState({
+      panelState: {
+        x: LEFT_PANEL_WIDTH + 16,
+        y: window.innerHeight - TIMLINE_HEIGHT - 16 - PANEL_HEIGHT * scale,
+        width: PANEL_WIDTH * scale,
+        height: PANEL_HEIGHT * scale,
+        minimized: true
+      }
+    })
+  }
+   componentWillReceiveProps(nextProps) {
+     const {panelState} = this.state;
+     this.scale(nextProps.floatingWindowScale)
+    //  this.setState({
+    //   panelState: {
+    //     ...panelState,
+    //     height: panelState.width / nextProps.videoAspectRatio + TITLE_HEIGHT
+    //   }
+    // });
+    //  debugger
+    //  if (this.props.videoAspectRatio !== nextProps.videoAspectRatio) {
+     
+    //  }
+     
+   }
+
   _onUpdate = panelState => {
-    const {videoAspectRatio} = this.props;
+    const { videoAspectRatio } = this.props;
     this.setState({
       panelState: {
         ...panelState,
@@ -61,9 +96,8 @@ export default class CameraPanel extends PureComponent {
   };
 
   render() {
-    const {log} = this.props;
-    const {panelState} = this.state;
-
+    const { log } = this.props;
+    const { panelState } = this.state;
     return (
       <FloatPanel
         {...panelState}
@@ -72,8 +106,11 @@ export default class CameraPanel extends PureComponent {
         resizable={true}
         onUpdate={this._onUpdate}
         style={FLOAT_PANEL_STYLE}
+        className="test"
       >
+        {/* <XVIZPanel log={log} name="Camera" style={XVIZ_PANEL_STYLE} /> */}
         <XVIZPanel log={log} name="Camera" style={XVIZ_PANEL_STYLE} />
+        
       </FloatPanel>
     );
   }

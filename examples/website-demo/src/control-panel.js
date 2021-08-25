@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, {PureComponent} from 'react';
-import {StreamSettingsPanel, XVIZPanel} from 'streetscape.gl';
+import React, { PureComponent } from 'react';
+import { StreamSettingsPanel, XVIZPanel } from 'streetscape.gl';
 
-import {XVIZ_PANEL_STYLE, STREAM_SETTINGS_STYLE} from './custom-styles';
+import { XVIZ_PANEL_STYLE, STREAM_SETTINGS_STYLE } from './custom-styles';
 import MetadataPanel from './metadata-panel';
 import HelpPanel from './help-panel';
 
@@ -31,11 +31,11 @@ export default class ControlPanel extends PureComponent {
   };
 
   _gotoTab(tab) {
-    this.setState({tab, lastTab: this.state.tab});
+    this.setState({ tab, lastTab: this.state.tab });
   }
 
   _renderTabContent() {
-    const {log, selectedLog, onLogChange} = this.props;
+    const { log, selectedLog, onLogChange } = this.props;
 
     switch (this.state.tab) {
       case 'streams':
@@ -48,7 +48,7 @@ export default class ControlPanel extends PureComponent {
             name="Metrics"
             style={XVIZ_PANEL_STYLE}
             componentProps={{
-              metric: {getColor: '#ccc'}
+              metric: { getColor: '#ccc' }
             }}
           />
         );
@@ -64,8 +64,8 @@ export default class ControlPanel extends PureComponent {
     }
   }
 
-  _renderTab({id, description}) {
-    const {tab} = this.state;
+  _renderTab({ id, description }) {
+    const { tab } = this.state;
 
     return (
       <div className={`tab ${id === tab ? 'active' : ''}`} onClick={() => this._gotoTab(id)}>
@@ -75,7 +75,7 @@ export default class ControlPanel extends PureComponent {
   }
 
   render() {
-    const {tab} = this.state;
+    const { tab } = this.state;
 
     const isHelpOpen = tab === 'help';
 
@@ -96,14 +96,25 @@ export default class ControlPanel extends PureComponent {
           {!isHelpOpen && (
             <div id="tabs">
               {/* {this._renderTab({id: 'info', description: 'Log Info'})} */}
-              {this._renderTab({id: 'streams', description: 'Stream Settings'})}
+              {this._renderTab({ id: 'streams', description: 'Stream Settings' })}
               {/* {this._renderTab({id: 'charts', description: 'Charts'})} */}
             </div>
           )}
         </header>
 
-        <main>{this._renderTabContent()}</main>
+        <main>{this._renderTabContent()}
+
+          <div style={{ color: 'white', padding: '16px' }}>
+            <div> Change Video Size: </div>
+            <input id="videoResizer" type="range" min="50" max="150" value={this.props.floatingWindowScale} onChange={this.props.handleVideoResize} style={{cursor:"pointer"}} />
+          </div>
+
+        </main>
+
       </div>
+
+
+
     );
   }
 }

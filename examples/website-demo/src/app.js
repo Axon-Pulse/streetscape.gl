@@ -43,6 +43,7 @@ import './stylesheets/main.scss';
 
 class Example extends PureComponent {
   state = {
+    floatingWindowScale:100,
     ...(!isMobile && this._loadLog(LOGS[0])),
     settings: {
       viewMode: 'PERSPECTIVE',
@@ -76,7 +77,7 @@ class Example extends PureComponent {
       // bufferLength: 15,
       serverConfig: {
         defaultLogLength: 30,
-        serverUrl: 'ws://localhost:8082'
+        serverUrl: 'ws://localhost:8083'
       },
       worker: true,
       maxConcurrency: 4
@@ -118,18 +119,28 @@ class Example extends PureComponent {
     });
   };
 
+  handleVideoResize = (e)=>{
+    this.setState({
+      ...this.state,
+      floatingWindowScale: e.currentTarget.value
+    })
+
+  }
+
+
   render() {
     if (isMobile) {
       return <NotificationPanel notification={MOBILE_NOTIFICATION} />;
     }
 
     const {log, selectedLog, settings} = this.state;
-
     return (
       <div id="container">
         <MapView log={log} settings={settings} onSettingsChange={this._onSettingsChange} />
 
-        <ControlPanel selectedLog={selectedLog} onLogChange={this._onLogChange} log={log} />
+        <ControlPanel selectedLog={selectedLog} onLogChange={this._onLogChange} log={log} 
+          handleVideoResize={this.handleVideoResize}
+          floatingWindowScale={this.state.floatingWindowScale}/>
 
         <HUD log={log} showHud={false}/> 
 
@@ -137,7 +148,8 @@ class Example extends PureComponent {
 
         <Toolbar settings={settings} onSettingsChange={this._onSettingsChange} />
 
-        <CameraPanel log={log} videoAspectRatio={selectedLog.videoAspectRatio} />
+         {/* <CameraPanel log={log} videoAspectRatio={selectedLog.videoAspectRatio} />   */}
+         <CameraPanel log={log} videoAspectRatio={1920/1080}  floatingWindowScale={this.state.floatingWindowScale}/>  
       </div>
     );
   }

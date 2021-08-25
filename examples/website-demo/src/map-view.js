@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, { PureComponent } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { LogViewer, VIEW_MODE } from 'streetscape.gl';
 
@@ -35,35 +35,26 @@ const OBJECT_ICONS = {
   Cyclist: 'bike'
 };
 
-const getLabel = (id, log) => {
-  debugger
-      let label = 'car';
-      const currentObject = log.getCurrentFrame().features['/tracklets/objects'].filter(({ id: _id }) => _id.includes(id))[0];
-      label = OBJECT_ICONS[currentObject?.id?.split(" ")[0]];
-      return label
-}
+// const getLabel = (id, log) => {
+//   //debugger
+//       let label = 'car';
+//       const currentObject = log.getCurrentFrame().features['/tracklets/objects'].filter(({ id: _id }) => _id.includes(id))[0];
+//       label = OBJECT_ICONS[currentObject?.id?.split(" ")[0]];
+//       return label
+// }
+
+
 //const renderObjectLabel = ({id, object, isSelected}) => {
 const renderObjectLabel =  ({ id, object, isSelected, log }) => {
-  // const label =  getLabel(id, log);
+  const currentFrame = log.getCurrentFrame();
+  const feature = currentFrame?.features['/tracklets/objects']?.filter(({ id: _id }) => _id.includes(id))[0];
+  const featureData = currentFrame?.streams['/tracklets/label'];
 
-  // const label = 'car'
-  
-
-  const feature = log.getCurrentFrame().features['/tracklets/objects'].filter(({ id: _id }) => _id.includes(id))[0];
-  //  if(isSelected){
-     debugger
-  //  }
-  // return (
-  //   <div>
-  //     <i className={`icon-${label}`} />
-  //   </div>
-  // );
   if (!feature) {
     return isSelected && <b>{id}</b>;
   }
 
   const { classes } = feature.base;
-
   if (isSelected) {
     return (
       <div>
@@ -76,11 +67,13 @@ const renderObjectLabel =  ({ id, object, isSelected, log }) => {
   }
 
   const objectType = classes;
+  
+  const confidence = featureData?.features[1].text;
+
   if (objectType in OBJECT_ICONS) {
-    debugger
     return (
-      <div>
-        <i className={`icon-${OBJECT_ICONS[objectType]}`} />
+      <div >
+        <i className={`icon-${OBJECT_ICONS[objectType]}`} /> {confidence ? ` | ${confidence}%` : ''}
       </div>
     );
   }
@@ -88,28 +81,34 @@ const renderObjectLabel =  ({ id, object, isSelected, log }) => {
   return null;
 };
 
-export default class MapView extends PureComponent {
-  _onViewStateChange = ({ viewOffset }) => {
-    this.props.onSettingsChange({ viewOffset });
+
+
+
+
+const MapView = (props) => {
+  
+  const {log,settings} = props;
+
+  const _onViewStateChange = ({ viewOffset }) => {
+    props.onSettingsChange({ viewOffset });
   };
 
-  render() {
-    const { log, settings } = this.props;
-
-    return (
-      <LogViewer
-        log={log}
-        mapboxApiAccessToken={MAPBOX_TOKEN}
-        mapStyle={MAP_STYLE}
-        car={CAR}
-        xvizStyles={XVIZ_STYLE}
-        style={LOG_VIEWER_STYLE}
-        showTooltip={settings.showTooltip}
-        viewMode={VIEW_MODE[settings.viewMode]}
-        viewOffset={settings.viewOffset}
-        onViewStateChange={this._onViewStateChange}
-        renderObjectLabel={({ id, object, isSelected }) => renderObjectLabel({ id, object, isSelected, log })}
-      />
-    );
-  }
+  return (
+    <LogViewer
+      log={log}
+      mapboxApiAccessToken={MAPBOX_TOKEN}
+      mapStyle={MAP_STYLE}
+      car={CAR}
+      xvizStyles={XVIZ_STYLE}
+      style={LOG_VIEWER_STYLE}
+      showTooltip={settings.showTooltip}
+      viewMode={VIEW_MODE[settings.viewMode]}
+      viewOffset={settings.viewOffset}
+      onViewStateChange={_onViewStateChange}
+      renderObjectLabel={({ id, object, isSelected }) => renderObjectLabel({ id, object, isSelected, log })}
+    />
+  );
 }
+export default MapView;
+
+
