@@ -48,27 +48,32 @@ const OBJECT_ICONS = {
 const renderObjectLabel =  ({ id, object, isSelected, log }) => {
   const currentFrame = log.getCurrentFrame();
   const feature = currentFrame?.features['/tracklets/objects']?.filter(({ id: _id }) => _id.includes(id))[0];
-  const featureData = currentFrame?.streams['/tracklets/label'];
+  
 
   if (!feature) {
     return isSelected && <b>{id}</b>;
   }
+  
+  const featureData = currentFrame?.streams['/tracklets/label']?.features.filter(({ id: _id }) => _id.includes(id));
 
   const { classes } = feature.base;
-  if (isSelected) {
-    return (
-      <div>
+  const objectId = featureData[2]?.text;
+    if (isSelected) {
+      return (
         <div>
-          <b>{id}</b>
+          <div>
+            <b>{objectId}</b>
+          </div>
+          <div></div>
         </div>
-        <div>{classes.join(' ')}</div>
-      </div>
-    );
-  }
+      );
+    }
 
   const objectType = classes;
   
-  const confidence = featureData?.features[1].text;
+  const confidence = featureData[1]?.text;
+
+  
 
   if (objectType in OBJECT_ICONS) {
     return (

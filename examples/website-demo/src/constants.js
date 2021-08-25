@@ -28,13 +28,14 @@ export const MAP_STYLE = 'mapbox://styles/uberdata/cjfxhlikmaj1b2soyzevnywgs';
 
 // OBJ model width 2073mm, length 4946mm
 // Volkswagen Passat: width 1820mm, length 4780mm
-export const CAR = {
-  mesh: load('./assets/car.obj', OBJLoader),
-  origin: [1.08, -0.32, 0],
-  scale: 0.0009,
-  wireframe: true,
-  color: [160, 160, 160,0]
-};
+ export const CAR = {
+   mesh: load('./assets/car.obj', OBJLoader),
+   origin: [1.08, -0.32, 0],
+  //  scale: 0.0009,
+  scale: 0.00000000000001,
+   wireframe: true,
+   color: [160, 160, 160,0]
+ };
 
 export const SETTINGS = {
   viewMode: {

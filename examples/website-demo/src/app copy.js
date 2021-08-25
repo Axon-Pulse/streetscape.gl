@@ -115,9 +115,27 @@ class Example extends PureComponent {
   };
 
   _onSettingsChange = changedSettings => {
-    this.setState({
-      settings: {...this.state.settings, ...changedSettings}
-    });
+    
+    if(changedSettings.viewOffset){
+      const {bearing,x,y} = changedSettings.viewOffset
+      if(bearing === 0 && x === 0 && y === 0){
+        debugger
+        return;
+      }  
+      console.log(this.state.settings);
+      const viewOffset = {...changedSettings.viewOffset};
+      const viewMode = changedSettings.viewMode;
+      this.setState({
+        settings: {...this.state.settings, ...changedSettings,viewOffset }
+      });
+    }
+    
+    else{
+      this.setState({
+        settings: {...this.state.settings, ...changedSettings}
+      });
+    }
+    
   };  
 
   handleVideoResize = (e)=>{
