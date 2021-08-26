@@ -202,8 +202,6 @@ export const LOG_VIEWER_STYLE = {
   objectLabelLine: props => (props.isSelected ? null : {display: 'none'}),
   objectLabelBody: props => {
     const {object, xvizStyles, isSelected} = props;
-    if(isSelected)
-      debugger
     let background = '#F8F8F9';
     let color = '#222';
     if (!isSelected) {

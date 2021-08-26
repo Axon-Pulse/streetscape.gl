@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 
 import { LogViewer, VIEW_MODE } from 'streetscape.gl';
 
@@ -35,30 +35,26 @@ const OBJECT_ICONS = {
   Cyclist: 'bike'
 };
 
-// const getLabel = (id, log) => {
-//   //debugger
-//       let label = 'car';
-//       const currentObject = log.getCurrentFrame().features['/tracklets/objects'].filter(({ id: _id }) => _id.includes(id))[0];
-//       label = OBJECT_ICONS[currentObject?.id?.split(" ")[0]];
-//       return label
-// }
+const MapView = (props) => {
 
+  const { log, settings } = props;
 
-//const renderObjectLabel = ({id, object, isSelected}) => {
-const renderObjectLabel =  ({ id, object, isSelected, log }) => {
-  const currentFrame = log.getCurrentFrame();
-  const feature = currentFrame?.features['/tracklets/objects']?.filter(({ id: _id }) => _id.includes(id))[0];
-  
+  const _onViewStateChange = ({ viewOffset }) => {
+    props.onSettingsChange({ viewOffset });
+  };
 
-  if (!feature) {
-    return isSelected && <b>{id}</b>;
-  }
-  
-  const featureData = currentFrame?.streams['/tracklets/label']?.features.filter(({ id: _id }) => _id.includes(id));
+  const renderObjectLabel = ({ id, object, isSelected, log }) => {
+    const currentFrame = log.getCurrentFrame();
+    const feature = currentFrame?.features['/tracklets/objects']?.filter(({ id: _id }) => _id.includes(id))[0];
+    
+    if (!feature) {
+      return <Fragment/>
+    }
 
-  const { classes } = feature.base;
-  const objectId = featureData[2]?.text;
-    if (isSelected) {
+    const featureData = currentFrame?.streams['/tracklets/label']?.features.filter(({ id: _id }) => _id.includes(id));
+
+    if (featureData && featureData[2] && isSelected) {
+      const objectId = featureData[2].text;
       return (
         <div>
           <div>
@@ -69,33 +65,18 @@ const renderObjectLabel =  ({ id, object, isSelected, log }) => {
       );
     }
 
-  const objectType = classes;
-  
-  const confidence = featureData[1]?.text;
+    const objectType = feature.base.classes;
+    const confidence = featureData[1]?.text;
 
-  
+    if (objectType in OBJECT_ICONS) {
+      return (
+        <div >
+          <i className={`icon-${OBJECT_ICONS[objectType]}`} /> {confidence ? ` | ${confidence}%` : ''}
+        </div>
+      );
+    }
 
-  if (objectType in OBJECT_ICONS) {
-    return (
-      <div >
-        <i className={`icon-${OBJECT_ICONS[objectType]}`} /> {confidence ? ` | ${confidence}%` : ''}
-      </div>
-    );
-  }
-
-  return null;
-};
-
-
-
-
-
-const MapView = (props) => {
-  
-  const {log,settings} = props;
-
-  const _onViewStateChange = ({ viewOffset }) => {
-    props.onSettingsChange({ viewOffset });
+    return null;
   };
 
   return (

@@ -25,7 +25,6 @@ import {PlaybackControl} from 'streetscape.gl';
 import {PLAYBACK_CONTROL_STYLE} from './custom-styles';
 
 const formatTimestamp = x => new Date(x * 1000).toUTCString();
-
 export default class Timeline extends PureComponent {
   state = {
     isPlaying: false
@@ -40,6 +39,7 @@ export default class Timeline extends PureComponent {
   }
 
   _seek(delta) {
+    debugger
     const {log} = this.props;
     const startTime = log.getLogStartTime();
     const endTime = log.getLogEndTime();
@@ -81,11 +81,10 @@ export default class Timeline extends PureComponent {
       default:
     }
   };
-
+  
   render() {
     const {log} = this.props;
     const {isPlaying} = this.state;
-
     return (
       <div id="timeline">
         <PlaybackControl

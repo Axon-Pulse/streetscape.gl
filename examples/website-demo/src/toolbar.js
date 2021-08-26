@@ -74,7 +74,7 @@ export default class Toolbar extends PureComponent {
   };
 
   _resetView = () => {
-    this.props.onSettingsChange({viewOffset: {x: 0, y: 0, bearing: 0}});
+    this.props.onSettingsChange({viewOffset: {bearing: -90, x: 0, y: 180 }});
   };
 
   _toggleTooltip = showTooltip => {

@@ -9,6 +9,7 @@ body {
   line-height: 24px;
 }
 
+
 #container {
   position: fixed;
   top: 0;
@@ -20,7 +21,8 @@ body {
 #control-panel {
   position: fixed;
   width: 348px;
-  height: calc(100vh - 150px);
+  // height: calc(100vh - 150px);
+  height: 100vh;
   // border-bottom: solid 1px #000;
   border-bottom: 1px solid #333333;
 }
@@ -32,6 +34,7 @@ body {
   border-left: solid 1px #000;
 }
 #hud {
+  display: none !important;
   position: fixed;
   width: 348px;
   height: 149px;
@@ -49,6 +52,48 @@ body {
   margin-bottom: 2px !important;
   opacity: 0.4;
 }
+
+#timestamps{
+  .timestamps-form{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    .timestamps-form-item{
+      width: 48%;
+      padding: 4px 0;
+      cursor: pointer;
+    }
+    input{
+      text-indent: 8px;
+    }
+  }
+  .errMsg{
+    opacity: 0;
+  }
+
+    .timestamps-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    .timestamp-item-container{
+      width: 48%;
+      border: 1px solid;
+      margin-bottom: 4px;
+      cursor: pointer;
+      .timestamp-item{
+        padding:0 8px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .timestamp-text{
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+  }
+}
+
+
 
 
 #videoResizer{
