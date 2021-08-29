@@ -35,9 +35,9 @@ const TIMLINE_HEIGHT = 150;
 export default class CameraPanel extends PureComponent {
   state = {
     panelState: {
-      x: LEFT_PANEL_WIDTH + 16,
-      y: window.innerHeight - TIMLINE_HEIGHT - 16 - (400 / this.props.videoAspectRatio) + TITLE_HEIGHT,
-      width: 400,
+      x: LEFT_PANEL_WIDTH + 8,
+      y: window.innerHeight - TIMLINE_HEIGHT - 16 - (LEFT_PANEL_WIDTH / this.props.videoAspectRatio) + TITLE_HEIGHT,
+      width: LEFT_PANEL_WIDTH,
       height: 0,
       minimized: false
     }
@@ -49,41 +49,55 @@ export default class CameraPanel extends PureComponent {
         ...panelState,
         height: panelState.width / this.props.videoAspectRatio + TITLE_HEIGHT
       }
-    });      
+    });
     PANEL_HEIGHT = panelState.width / this.props.videoAspectRatio + TITLE_HEIGHT;
     PANEL_WIDTH = 400;
   }
 
-  
 
-  scale = (scale) => {
-  
+
+  scale = ({scale,direction}) => {
+
     scale = (parseInt(scale) / 100);
+    let { x: newX, y: newY } = this.state.panelState;
+    newX = newX > LEFT_PANEL_WIDTH - 16 ? newX : LEFT_PANEL_WIDTH + 16;
+    direction === 'bigger'
+     ? newY = newY < window.innerHeight - TIMLINE_HEIGHT - 16 - (PANEL_HEIGHT * scale) ? newY : window.innerHeight - TIMLINE_HEIGHT - 16 - (PANEL_HEIGHT * scale)
+     : newY = newY < window.innerHeight - TIMLINE_HEIGHT - 16 - (PANEL_HEIGHT * scale) ? newY : window.innerHeight - TIMLINE_HEIGHT - 16 + (PANEL_HEIGHT * scale);
+    
     this.setState({
       panelState: {
-        x: LEFT_PANEL_WIDTH + 16,
-        y: window.innerHeight - TIMLINE_HEIGHT - 16 - PANEL_HEIGHT * scale,
+        // x: LEFT_PANEL_WIDTH + 16,
+        // y: window.innerHeight - TIMLINE_HEIGHT - 16 - PANEL_HEIGHT * scale,
+        x: newX,
+        y: newY,
         width: PANEL_WIDTH * scale,
         height: PANEL_HEIGHT * scale,
         minimized: true
       }
     })
   }
-   componentWillReceiveProps(nextProps) {
-     const {panelState} = this.state;
-     this.scale(nextProps.floatingWindowScale)
-    //  this.setState({
-    //   panelState: {
-    //     ...panelState,
-    //     height: panelState.width / nextProps.videoAspectRatio + TITLE_HEIGHT
-    //   }
-    // });
-    //  debugger
-    //  if (this.props.videoAspectRatio !== nextProps.videoAspectRatio) {
-     
-    //  }
-     
-   }
+  componentWillReceiveProps(nextProps, prevProps) {
+    const { panelState } = this.state;
+    if (this.props.floatingWindowScale !== nextProps.floatingWindowScale) {
+      this.props.floatingWindowScale > nextProps.floatingWindowScale
+      ? this.scale({scale:nextProps.floatingWindowScale,direction:'smaller'})
+      : this.scale({scale:nextProps.floatingWindowScale,direction:'bigger'});
+       
+    }
+
+    // //  this.setState({
+    // //   panelState: {
+    // //     ...panelState,
+    // //     height: panelState.width / nextProps.videoAspectRatio + TITLE_HEIGHT
+    // //   }
+    // // });
+    // //  debugger
+    // //  if (this.props.videoAspectRatio !== nextProps.videoAspectRatio) {
+
+    // //  }
+
+  }
 
   _onUpdate = panelState => {
     const { videoAspectRatio } = this.props;
@@ -110,7 +124,7 @@ export default class CameraPanel extends PureComponent {
       >
         {/* <XVIZPanel log={log} name="Camera" style={XVIZ_PANEL_STYLE} /> */}
         <XVIZPanel log={log} name="Camera" style={XVIZ_PANEL_STYLE} />
-        
+
       </FloatPanel>
     );
   }

@@ -60,10 +60,9 @@ class Example extends PureComponent {
         minZoom: 12,
         pitch: 79.46287171948006,
         width: 916,
-        zoom: 22
+        zoom: 20.66447915671683
       },
-      viewOffset: { bearing: -90, x: 0, y: 180 }
-      //viewOffset: { bearing: -78.88, x: 5.56, y: 142.16 }
+      viewOffset: { bearing: 0, x: 0, y: 180 }
     },
 
   };

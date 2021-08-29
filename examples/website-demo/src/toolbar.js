@@ -27,7 +27,7 @@ import {TOOLTIP_STYLE, TOOLBAR_MENU_STYLE, TOOLBAR_BUTTON_STYLE} from './custom-
 const VIEW_MODE = {
   TOP_DOWN: {desc: 'Top down (T)', icon: 'top'},
   PERSPECTIVE: {desc: 'Perspective (P)', icon: 'perspective'},
-  DRIVER: {desc: 'Driver (D)', icon: 'driver'}
+  // DRIVER: {desc: 'Driver (D)', icon: 'driver'}
 };
 
 const noop = () => {};
@@ -53,9 +53,9 @@ export default class Toolbar extends PureComponent {
         this._gotoViewMode('PERSPECTIVE');
         break;
 
-      case 'D':
-        this._gotoViewMode('DRIVER');
-        break;
+      // case 'D':
+      //   this._gotoViewMode('DRIVER');
+      //   break;
 
       case 'R':
         this._resetView();
