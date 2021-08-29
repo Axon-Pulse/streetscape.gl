@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, { Fragment, useEffect, useState } from 'react';
+import React, {PureComponent, Fragment, useEffect, useState } from 'react';
 
 import { LogViewer, VIEW_MODE } from 'streetscape.gl';
 
@@ -35,56 +35,60 @@ const OBJECT_ICONS = {
   Cyclist: 'bike'
 };
 
+
+const renderObjectLabel = ({ id, object, isSelected, log }) => {
+  const currentFrame = log.getCurrentFrame();
+  const feature = currentFrame?.features['/tracklets/objects']?.filter(({ id: _id }) => _id.includes(id))[0];
+  
+   if (!feature) {
+     return <Fragment/>
+   }
+
+   const featureData = currentFrame?.streams['/tracklets/label']?.features.filter(({ id: _id }) => _id.includes(id));
+
+   if (featureData && featureData[2] && isSelected) {
+     const objectId = featureData[2].text;
+     return (
+       <div>
+         <div>
+           <b>{objectId}</b>
+         </div>
+         <div></div>
+       </div>
+     );
+   }
+
+  const objectType = feature.base.classes;
+  const confidence = featureData[1]?.text;
+
+  if (objectType in OBJECT_ICONS) {
+    return (
+      <div >
+        <i className={`icon-${OBJECT_ICONS[objectType]}`} /> {confidence ? ` | ${confidence}%` : ''}
+      </div>
+    );
+  }
+
+  return null;
+};
+
+
+
+
+
 const MapView = (props) => {
-
   const { log, settings } = props;
-
   const _onViewStateChange = ({ viewOffset }) => {
     props.onSettingsChange({ viewOffset });
   };
-
-  const renderObjectLabel = ({ id, object, isSelected, log }) => {
-    const currentFrame = log.getCurrentFrame();
-    const feature = currentFrame?.features['/tracklets/objects']?.filter(({ id: _id }) => _id.includes(id))[0];
-    
-    if (!feature) {
-      return <Fragment/>
-    }
-
-    const featureData = currentFrame?.streams['/tracklets/label']?.features.filter(({ id: _id }) => _id.includes(id));
-
-    if (featureData && featureData[2] && isSelected) {
-      const objectId = featureData[2].text;
-      return (
-        <div>
-          <div>
-            <b>{objectId}</b>
-          </div>
-          <div></div>
-        </div>
-      );
-    }
-
-    const objectType = feature.base.classes;
-    const confidence = featureData[1]?.text;
-
-    if (objectType in OBJECT_ICONS) {
-      return (
-        <div >
-          <i className={`icon-${OBJECT_ICONS[objectType]}`} /> {confidence ? ` | ${confidence}%` : ''}
-        </div>
-      );
-    }
-
-    return null;
-  };
-
   return (
     <LogViewer
       log={log}
       mapboxApiAccessToken={MAPBOX_TOKEN}
       mapStyle={MAP_STYLE}
+      // car={CAR}
       car={CAR}
+
       xvizStyles={XVIZ_STYLE}
       style={LOG_VIEWER_STYLE}
       showTooltip={settings.showTooltip}
@@ -96,5 +100,76 @@ const MapView = (props) => {
   );
 }
 export default MapView;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// export default class MapView extends PureComponent {
+
+//   _onViewStateChange = ({ viewOffset }) => {
+//     this.props.onSettingsChange({ viewOffset });
+//   };
+
+//   render(){
+//     const { log, settings } = this.props;
+
+//     return (
+//       <LogViewer
+//         log={log}
+//         mapboxApiAccessToken={MAPBOX_TOKEN}
+//         mapStyle={MAP_STYLE}
+//         car={CAR}
+//         xvizStyles={XVIZ_STYLE}
+//         style={LOG_VIEWER_STYLE}
+//         showTooltip={settings.showTooltip}
+//         viewMode={VIEW_MODE[settings.viewMode]}
+//         viewOffset={settings.viewOffset}
+//         onViewStateChange={this._onViewStateChange}
+//         renderObjectLabel={({ id, object, isSelected }) => renderObjectLabel({ id, object, isSelected, log })}
+//       />
+//     );
+
+//   }
+
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

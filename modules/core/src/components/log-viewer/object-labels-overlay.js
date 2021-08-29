@@ -19,14 +19,14 @@
 // THE SOFTWARE.
 
 // @flow
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import PerspectivePopup from './perspective-popup';
 
-import {resolveCoordinateTransform, positionToLngLat} from '../../utils/transform';
+import { resolveCoordinateTransform, positionToLngLat } from '../../utils/transform';
 
-const renderDefaultObjectLabel = ({id, isSelected}) => isSelected && <div>ID: {id}</div>;
+const renderDefaultObjectLabel = ({ id, isSelected }) => isSelected && <div>ID: {id}</div>;
 
 export default class ObjectLabelsOverlay extends PureComponent {
   static propTypes = {
@@ -54,7 +54,7 @@ export default class ObjectLabelsOverlay extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {frame} = nextProps;
+    const { frame } = nextProps;
 
     if (frame && frame !== this.props.frame) {
       this.setState({
@@ -64,14 +64,14 @@ export default class ObjectLabelsOverlay extends PureComponent {
   }
 
   _getCoordinateProps(streamName) {
-    const {coordinateProps} = this.state;
+    const { coordinateProps } = this.state;
     let result = coordinateProps[streamName];
 
     if (result) {
       return result;
     }
 
-    const {frame, streamsMetadata, getTransformMatrix} = this.props;
+    const { frame, streamsMetadata, getTransformMatrix } = this.props;
     result = resolveCoordinateTransform(
       frame,
       streamName,
@@ -85,7 +85,7 @@ export default class ObjectLabelsOverlay extends PureComponent {
   }
 
   _renderPerspectivePopup = object => {
-    const {objectSelection, xvizStyleParser, style, renderObjectLabel} = this.props;
+    const { objectSelection, xvizStyleParser, style, renderObjectLabel } = this.props;
 
     const isSelected = Boolean(objectSelection[object.id]);
     const styleProps = {
@@ -113,7 +113,8 @@ export default class ObjectLabelsOverlay extends PureComponent {
         objectHeight = xvizStyleParser.getStylesheet(streamName).getProperty('height', feature);
       }
     }
-
+    if (!trackingPoint || !trackingPoint[2])
+      return <div></div>
     trackingPoint[2] += objectHeight || 0;
 
     return (
@@ -136,7 +137,7 @@ export default class ObjectLabelsOverlay extends PureComponent {
   };
 
   render() {
-    const {frame, renderObjectLabel} = this.props;
+    const { frame, renderObjectLabel } = this.props;
 
     if (!frame || !renderObjectLabel) {
       return null;

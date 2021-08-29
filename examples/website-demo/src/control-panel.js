@@ -31,7 +31,7 @@ const ControlPanel = (props) => {
   });
   const [timestamps, setTimestamps] = useState([]);
   const [timestampLabel, setTimestampLabel] = useState('');
-  const [showErrorMsg, setShowErrorMsg] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     const timestampsStr = localStorage.getItem('timestamps');
@@ -98,19 +98,37 @@ const ControlPanel = (props) => {
 
   const isHelpOpen = tab === 'help';
 
+  const isInTimestampsArr = () => {
+    debugger
+    if (timestamps[0]) {
+      const timestamp = timestamps.filter(item => item.label === timestampLabel)
+      return timestamp[0] ? true : false;
+    }
+
+    return false;
+  }
+
   const addTimestamp = () => {
-    if (timestampLabel !== '') {// && !isInTimestampsArr(timestampLabel)){
+    if (timestampLabel !== '' && !timestamps[0]) {
       const currentTime = log.getCurrentTime();
       setTimestamps([...timestamps, { time: currentTime, label: timestampLabel }]);
       setTimestampLabel('');
     }
-    else {
-      setShowErrorMsg(true);
+    else if (timestampLabel === '') {
+      setErrorMsg('Please add timestamp label');
       setTimeout(() => {
-        setShowErrorMsg(false);
+        setErrorMsg(null);
       }, 3000)
+    } else if (isInTimestampsArr(timestampLabel)) {
+      setErrorMsg('Timestamp label already exsist');
+      setTimeout(() => {
+        setErrorMsg(null);
+      }, 3000)
+    } else {
+      const currentTime = log.getCurrentTime();
+      setTimestamps([...timestamps, { time: currentTime, label: timestampLabel }]);
+      setTimestampLabel('');
     }
-
   }
 
   const removeTimestamp = (timestampLabel) => {
@@ -123,7 +141,7 @@ const ControlPanel = (props) => {
     <Fragment>
       <div id="logo">
         <a href="../index.html">
-          <img src="assets/logo.png" />
+          <img src="assets/logo_new.png" />
         </a>
       </div>
 
@@ -157,7 +175,7 @@ const ControlPanel = (props) => {
         }
         <main>
 
-  
+
 
           <div>
             <div id="timestamps">
@@ -168,7 +186,8 @@ const ControlPanel = (props) => {
                 <button className="timestamps-form-item" onClick={addTimestamp}>Add Timestamp</button>
               </div>
 
-              <div style={{ opacity: showErrorMsg ? 1 : 0 }}>Please add timestamp label</div>
+              {/* <div style={{ opacity: showErrorMsg ? 1 : 0 }}>Please add timestamp label</div> */}
+              <div style={{ opacity: errorMsg ? 1 : 0 }}> {errorMsg} </div>
 
               <div className="timestamps-container">
                 {timestamps[0] &&
@@ -194,7 +213,7 @@ const ControlPanel = (props) => {
           </div>
 
           <div id="videoResizer-container">
-            <h3 style={{marginBottom:0}}><u> Change Video Size: </u></h3>
+            <h3 style={{ marginBottom: 0 }}><u> Change Video Size: </u></h3>
             <input id="videoResizer" type="range" min="50" max="150" value={props.floatingWindowScale} onChange={props.handleVideoResize} style={{ cursor: "pointer" }} />
           </div>
 

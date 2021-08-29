@@ -52,7 +52,26 @@ body {
   margin-bottom: 2px !important;
   opacity: 0.4;
 }
-
+#player{
+    padding: 0 25px;
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    background: #2e2e2e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .playIcon,.pauseIcon{
+      width: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .player-speed-button{
+      padding: 3px 8px;
+      margin-left: 16px;
+    }
+}
 #timestamps{
   .timestamps-form{
     display: flex;
@@ -62,6 +81,8 @@ body {
       width: 48%;
       padding: 4px 0;
       cursor: pointer;
+      border:1px solid white;
+      margin-bottom: 4px;;
     }
     input{
       text-indent: 8px;
@@ -72,6 +93,7 @@ body {
   }
 
     .timestamps-container{
+      margin-top: 4px;;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
