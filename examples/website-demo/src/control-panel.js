@@ -186,8 +186,10 @@ const ControlPanel = (props) => {
                 <button className="timestamps-form-item" onClick={addTimestamp}>Add Timestamp</button>
               </div>
 
-              {/* <div style={{ opacity: showErrorMsg ? 1 : 0 }}>Please add timestamp label</div> */}
               <div style={{ opacity: errorMsg ? 1 : 0 }}> {errorMsg} </div>
+              {
+                <div style={{ display: timestamps[0] ? 'none' : 'block' }}> Timestamps not found</div>
+              }
 
               <div className="timestamps-container">
                 {timestamps[0] &&
