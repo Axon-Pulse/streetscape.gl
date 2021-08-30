@@ -29,6 +29,8 @@ const OBJECT_ICONS = {
   Vehicles: 'car',
   Walkers: 'pedestrian',
   '2Wheels': 'bike',
+  Bicycle:'bike',
+  Motorcycle:'bike',
   Car: 'car',
   Van: 'bus',
   Pedestrian: 'pedestrian',
