@@ -27,14 +27,22 @@ import { XVIZ_STYLE, LOG_VIEWER_STYLE } from './custom-styles';
 
 const OBJECT_ICONS = {
   Vehicles: 'car',
+  Car: 'car',
+
+  Pedestrian: 'pedestrian',
   Walkers: 'pedestrian',
+  Peds: 'pedestrian',
+  
+  Truck:'bus',
+  Van: 'bus',
+  
+  Cyclist: 'bike',
+  Cyclists: 'bike',
   '2Wheels': 'bike',
   Bicycle:'bike',
   Motorcycle:'bike',
-  Car: 'car',
-  Van: 'bus',
-  Pedestrian: 'pedestrian',
-  Cyclist: 'bike'
+  Motor:'bike',
+  
 };
 
 
