@@ -86,9 +86,7 @@ const MapView = (props) => {
       log={log}
       mapboxApiAccessToken={MAPBOX_TOKEN}
       mapStyle={MAP_STYLE}
-      // car={CAR}
       car={CAR}
-
       xvizStyles={XVIZ_STYLE}
       style={LOG_VIEWER_STYLE}
       showTooltip={settings.showTooltip}

@@ -19,12 +19,12 @@
 // THE SOFTWARE.
 
 /* global document */
-import React, {PureComponent} from 'react';
-import {render} from 'react-dom';
+import React, { PureComponent } from 'react';
+import { render } from 'react-dom';
 
-import {setXVIZConfig} from '@xviz/parser';
-import {XVIZFileLoader} from 'streetscape.gl';
-import {ThemeProvider} from '@streetscape.gl/monochrome';
+import { setXVIZConfig } from '@xviz/parser';
+import { XVIZFileLoader } from 'streetscape.gl';
+import { ThemeProvider } from '@streetscape.gl/monochrome';
 
 import ControlPanel from './control-panel';
 import CameraPanel from './camera-panel';
@@ -34,16 +34,16 @@ import Toolbar from './toolbar';
 import HUD from './hud';
 import NotificationPanel from './notification-panel';
 import isMobile from './is-mobile';
-import {XVIZStreamLoader} from 'streetscape.gl';
+import { XVIZStreamLoader } from 'streetscape.gl';
 
-import {LOGS, MOBILE_NOTIFICATION} from './constants';
-import {UI_THEME} from './custom-styles';
+import { LOGS, MOBILE_NOTIFICATION } from './constants';
+import { UI_THEME } from './custom-styles';
 
 import './stylesheets/main.scss';
 
 class Example extends PureComponent {
   state = {
-    floatingWindowScale:100,
+    floatingWindowScale: 100,
     ...(!isMobile && this._loadLog(LOGS[0])),
     settings: {
       viewMode: 'PERSPECTIVE',
@@ -72,7 +72,7 @@ class Example extends PureComponent {
       setXVIZConfig(logSettings.xvizConfig);
     }
 
-    const loader =  new XVIZStreamLoader({
+    const loader = new XVIZStreamLoader({
       logGuid: 'mock',
       // bufferLength: 15,
       serverConfig: {
@@ -82,30 +82,16 @@ class Example extends PureComponent {
       worker: true,
       maxConcurrency: 4
     }).on('ready', () =>
-    loader.updateStreamSettings({
-      '/tracklets/label': true,
-      // '/vehicle/':false
-    })
-  )
-  .on('error', console.error); // eslint-disable-line
-    
-
-    // const loader = new XVIZFileLoader({
-    //   timingsFilePath: `${logSettings.path}/0-frame.json`,
-    //   getFilePath: index => `${logSettings.path}/${index + 1}-frame.glb`,
-    //   worker: true,
-    //   maxConcurrency: 4
-    // })
-      // .on('ready', () =>
-      //   loader.updateStreamSettings({
-      //     '/tracklets/label': false
-      //   })
-      // )
-      // .on('error', console.error); // eslint-disable-line
+      loader.updateStreamSettings({
+        '/tracklets/label': true,
+        // '/vehicle/':false
+      })
+    )
+      .on('error', console.error); // eslint-disable-line
 
     loader.connect();
 
-    return {selectedLog: logSettings, log: loader};
+    return { selectedLog: logSettings, log: loader };
   }
 
   _onLogChange = selectedLog => {
@@ -114,12 +100,29 @@ class Example extends PureComponent {
   };
 
   _onSettingsChange = changedSettings => {
-    this.setState({
-      settings: {...this.state.settings, ...changedSettings}
-    });
-  };  
+    if (changedSettings.viewMode === "TOP_DOWN") {
+      this.setState({
+        settings: {
+          ...this.state.settings,
+          viewOffset: {
+            bearing: 159.64285714285708,
+            x: 158.33965394894267,
+            y: 207.79062493642164
+          },
+          ...changedSettings
+        }
+      });
 
-  handleVideoResize = (e)=>{
+    }
+    else {
+      this.setState({
+        settings: { ...this.state.settings, ...changedSettings }
+      });
+    }
+  };
+
+  handleVideoResize = (e) => {
+
     this.setState({
       ...this.state,
       floatingWindowScale: e.currentTarget.value
@@ -133,23 +136,23 @@ class Example extends PureComponent {
       return <NotificationPanel notification={MOBILE_NOTIFICATION} />;
     }
 
-    const {log, selectedLog, settings} = this.state;
+    const { log, selectedLog, settings } = this.state;
     return (
       <div id="container">
         <MapView log={log} settings={settings} onSettingsChange={this._onSettingsChange} />
 
-        <ControlPanel selectedLog={selectedLog} onLogChange={this._onLogChange} log={log} 
+        <ControlPanel selectedLog={selectedLog} onLogChange={this._onLogChange} log={log}
           handleVideoResize={this.handleVideoResize}
-          floatingWindowScale={this.state.floatingWindowScale}/>
+          floatingWindowScale={this.state.floatingWindowScale} />
 
-        <HUD log={log} showHud={false}/> 
+        <HUD log={log} showHud={false} />
 
         <Timeline log={log} />
 
         <Toolbar settings={settings} onSettingsChange={this._onSettingsChange} />
 
-         {/* <CameraPanel log={log} videoAspectRatio={selectedLog.videoAspectRatio} />   */}
-         <CameraPanel log={log} videoAspectRatio={1920/1080}  floatingWindowScale={this.state.floatingWindowScale}/>  
+        {/* <CameraPanel log={log} videoAspectRatio={selectedLog.videoAspectRatio} />   */}
+        <CameraPanel log={log} videoAspectRatio={1920 / 1080} floatingWindowScale={this.state.floatingWindowScale} />
       </div>
     );
   }

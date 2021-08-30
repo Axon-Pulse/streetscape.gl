@@ -60,7 +60,7 @@ export default class Timeline extends PureComponent {
   _onPlay = () => {
     clearInterval(this.manualPlayerInterval);
     this.setFramesUpdateRate({frameRate:100, isSlower:false})
-    this.setState({ isPlaying: true });
+    // this.setState({ isPlaying: true });
   }
   _onPause = () => {
     clearInterval(this.manualPlayerInterval);
@@ -68,13 +68,17 @@ export default class Timeline extends PureComponent {
   }
 
   _onKeyDown = evt => {
+    // evt.stopPropagation();
     switch (evt.keyCode) {
       case 32: // space
+      if(evt.target.className !== 'player-button'){
         if (this.state.isPlaying) {
+
           this._onPause();
         } else {
           this._onPlay();
         }
+      }
         break;
 
       case 37: // left
@@ -113,7 +117,7 @@ export default class Timeline extends PureComponent {
         <PlaybackControl
           compact={false}
           style={PLAYBACK_CONTROL_STYLE}
-          // isPlaying={isPlaying || this.manualPlayerInterval}
+          // isPlaying={isPlaying}
           onPlay={this._onPlay}
           onPause={this._onPause}
           onSeek={this._onSeek}
@@ -128,14 +132,14 @@ export default class Timeline extends PureComponent {
           {
             this.state.isPlaying
               ?
-              <button onClick={() => {
+              <button className="player-button" onClick={() => {
                 this._onPause();
               }}>
                 <svg width="100%" className="pauseIcon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
               </button>
 
               :
-              <button onClick={() => {
+              <button className="player-button" onClick={() => {
                 this._onPlay();
               }}>
                 <svg width="100%" className="playIcon" viewBox="0 0 24 24" ><path d="M8 5v14l11-7z"></path></svg>
